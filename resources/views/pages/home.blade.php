@@ -43,18 +43,27 @@
                     <div class="col-6 p-2 position-relative  custom-div-three">
                         <img class="img-fluid rounded-circle round-img position-relative z-0 custom-shadow" src="https://static.change.org/homepageV3/img/desiderioysoledad_los3%20(1).jpg" alt="">
                         <div class="bg-light position-absolute top-75 start-50 translate-middle px-5 border rounded-pill z-1 py-2 custom-pill">
+                            <p class="m-0 d-flex align-items-center ">
+                                <span class="text-danger fw-normal punto me-2">·</span> ¡Victoria!
+                            </p>
                             <p class="m-0 fw-normal">96.241 firmas</p>
                         </div>
                     </div>
                     <div class="col-6 p-2 position-relative custom-div-four">
                         <img class="img-fluid rounded-circle round-img position-relative z-0 custom-shadow" src="https://static.change.org/homepageV3/img/entrega_firmas_guardias_medicas_4r%20(1).jpg" alt="">
                         <div class="bg-light position-absolute top-75 start-50 translate-middle px-5 border rounded-pill z-1 py-2 custom-pill">
+                            <p class="m-0 d-flex align-items-center ">
+                                <span class="text-danger fw-normal punto me-2">·</span> ¡Victoria!
+                            </p>
                             <p class="m-0 fw-normal">192.007 firmas</p>
                         </div>
                     </div>
                     <div class="col-6 p-2 position-relative custom-div-five ">
                         <img class="img-fluid rounded-circle round-img position-relative z-0 custom-shadow" src="https://static.change.org/homepageV3/img/pornagore_elpais.png" alt="">
                         <div class="bg-light position-absolute top-75 start-50 translate-middle px-5 border rounded-pill z-1 py-2 custom-pill">
+                            <p class="m-0 d-flex align-items-center ">
+                                <span class="text-danger fw-normal punto me-2">·</span> ¡Victoria!
+                            </p>
                             <p class="m-0 fw-normal">141.337 firmas</p>
                         </div>
                     </div>

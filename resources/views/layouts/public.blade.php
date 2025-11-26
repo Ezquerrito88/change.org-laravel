@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
     <div class="container">
         <a class="navbar-brand navbar-brand-custom" href="{{ route('home') }}">change.org</a>
 
@@ -30,18 +30,52 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('peticiones.index') }}">
-                        <b><i class="bi bi-search me-1"></i>Buscar</b>
+                        <b><i class="bi bi-search me-1"></i> Buscar</b>
                     </a>
                 </li>
             </ul>
 
-            <div class="d-flex align-items-center">
-                <a href="{{ route('peticiones.create') }}" class="btn btn-outline-custom me-3">
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ route('peticiones.create') }}" class="btn btn-outline-custom">
                     Inicia una petición
                 </a>
-                <a href="#" class="nav-link text-dark fw-bold">
-                    Entrar
-                </a>
+
+                @auth
+                    <div class="dropdown text-end">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random&color=fff"
+                                 alt="{{ Auth::user()->name }}" width="40" height="40" class="rounded-circle border">
+                        </a>
+
+                        <ul class="dropdown-menu text-small dropdown-menu-end shadow" aria-labelledby="dropdownUser1">
+                            <li class="px-3 py-2 bg-light border-bottom mb-2">
+                                <span class="fw-bold text-muted small">Hola, {{ Auth::user()->name }}</span>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                    <i class="bi bi-speedometer2 me-2"></i> Ir a mi Dashboard
+                                </a>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi Perfil</a></li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger fw-bold">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                @else
+                    <a href="{{ route('login') }}" class="nav-link text-dark fw-bold">Entrar</a>
+                    <a href="{{ route('register') }}" class="btn btn-danger fw-bold text-white">Registrarse</a>
+                @endauth
             </div>
         </div>
     </div>
@@ -86,11 +120,9 @@
                 </ul>
             </div>
         </div>
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-            <div class="text-secondary small mb-3 mb-md-0">
-                <p class="mb-1 text-dark">© 2025, TuCausa.org, PBC</p>
-                <p class="fw-normal">Esta web está protegida por reCAPTCHA.</p>
-            </div>
+        <div class="text-secondary small mb-3 mb-md-0">
+            <p class="mb-1 text-dark">© 2025, TuCausa.org, PBC</p>
+            <p class="fw-normal">Esta web está protegida por reCAPTCHA.</p>
         </div>
     </div>
 </footer>

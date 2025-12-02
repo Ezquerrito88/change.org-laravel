@@ -21,7 +21,7 @@
                         <h1 class="title-font fw-bold">El cambio comienza aquí<span class="text-danger">.</span></h1>
                         <p class="fs-4 fw-normal mx-5">Únete a <span class="fw-bold">566.742.419</span> personas que están impulsando un cambio real en sus comunidades.</p>
                         <div class="d-flex gap-4 justify-content-center">
-                            <a href="{{ route('peticiones.create') }}" class="btn btn-warning fw-bold fs-5 btn-yellow transition py-3 px-4">Crear una petición</a>
+                            <a href="{{ route('petitions.create') }}" class="btn btn-warning fw-bold fs-5 btn-yellow transition py-3 px-4">Crear una petición</a>
                             <button class="btn btn-outline-dark border rounded fw-bold fs-5 transition py-3 px-4">Comenzar con IA</button>
                         </div>
                     </div>
@@ -122,7 +122,7 @@
             </div>
 
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-4">
-                <a href="{{ route('peticiones.show', ['id' => 1]) }}" class="text-decoration-none">
+                <a href="{{ route('petitions.show', ['id' => 1]) }}" class="text-decoration-none">
                     <div class="col">
                         <div class="card shadow p-0 h-100">
                             <img src="https://assets.change.org/photos/9/ca/rm/JACarMOCmNQsrUQ-800x450-noPad.jpg?1653998327" class="card-img-top border-bottom object-fit-cover" alt="Ley acoso escolar">

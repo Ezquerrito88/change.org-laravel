@@ -63,7 +63,7 @@ class PetitionController extends Controller
             'description' => 'required',
             'recipient'   => 'required',
             'category_id' => 'required',
-            'file'        => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'file'        => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $input = $request->all();

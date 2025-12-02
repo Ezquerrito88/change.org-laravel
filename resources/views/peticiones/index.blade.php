@@ -6,7 +6,7 @@
             <div class="col-lg-8 col-xl-7 mx-auto text-center">
                 <h1 class="fw-bold display-5" style="color: #403a49;">Descubre tu próxima causa</h1>
                 <p class="fs-5 text-secondary mb-4">Explora millones de peticiones y encuentra las que te interesan</p>
-                <form action="{{ route('peticiones.index') }}" method="GET">
+                <form action="{{ route('petitions.index') }}" method="GET">
                     <div class="input-group input-group-lg shadow-sm">
                         <span class="input-group-text bg-white border-end-0">
                             <i class="bi bi-search text-secondary"></i>
@@ -42,7 +42,7 @@
                         <img src="https://assets.change.org/photos/6/uf/zt/sGuFZtLrKpRsFcx-800x450-noPad.jpg?1762004291" class="card-img-top" alt="Imagen Petición">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title fw-bold">Por una justicia más rápida</h5>
-                            <a href="{{ route('peticiones.show', ['id' => 1]) }}" class="btn btn-outline-dark mt-auto">Ver petición</a>
+                            <a href="{{ route('petitions.show', ['id' => 1]) }}" class="btn btn-outline-dark mt-auto">Ver petición</a>
                         </div>
                     </div>
                 </div>

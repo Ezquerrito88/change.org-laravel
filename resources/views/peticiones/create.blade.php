@@ -9,6 +9,16 @@
 
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-4 p-md-5">
+                        {{-- Pega esto ANTES de la etiqueta <form> --}}
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <form action="{{ route('petitions.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 

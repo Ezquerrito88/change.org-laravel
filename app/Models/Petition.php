@@ -10,6 +10,8 @@ class Petition extends Model
 
     public function category() { return $this->belongsTo(Category::class); }
     public function user() { return $this->belongsTo(User::class); }
-    public function signers() { return $this->belongsToMany(User::class, 'petition_user'); }
+    public function signatures() {
+        return $this->belongsToMany(User::class, 'petition_user');
+    }
     public function files() { return $this->hasOne(File::class); }
 }

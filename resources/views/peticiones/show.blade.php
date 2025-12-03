@@ -30,7 +30,6 @@
                         </div>
 
                         <h2 class="fw-bold fs-1">La historia</h2>
-
                         <div style="white-space: pre-line;" class="fw-normal text-break">
                             {{ $petition->description }}
                         </div>
@@ -61,24 +60,31 @@
                             <div class="border-top mx-3 p-3">
                                 <h3 class="fw-bold fs-4 mb-3">Firma esta petición</h3>
 
-                                <form>
+                                <form action="{{ route('petitions.sign', $petition->id) }}" method="POST">
+                                    @csrf
+
                                     <div class="mb-3">
                                         <label class="form-label fw-normal">Nombre</label>
                                         <input type="text" class="form-control"
                                                value="{{ Auth::check() ? Auth::user()->name : '' }}"
-                                            {{ Auth::check() ? 'disabled' : 'placeholder="Tu nombre"' }}>
+                                               disabled>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label fw-normal">Email</label>
-                                        <input type="email" class="form-control"
-                                               value="{{ Auth::check() ? Auth::user()->email : '' }}"
-                                            {{ Auth::check() ? 'disabled' : 'placeholder="Tu email"' }}>
-                                    </div>
-
-                                    <button type="button" class="btn btn-warning w-100 fw-bold py-2 btn-yellow">
-                                        Firma la petición
-                                    </button>
+                                    @auth
+                                        @if($petition->signatures->contains(Auth::id()))
+                                            <button type="button" class="btn btn-success w-100 fw-bold py-2" disabled>
+                                                ¡Ya has firmado! <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        @else
+                                            <button type="submit" class="btn btn-warning w-100 fw-bold py-2 btn-yellow">
+                                                Firma la petición
+                                            </button>
+                                        @endif
+                                    @else
+                                        <a href="{{ route('login') }}" class="btn btn-warning w-100 fw-bold py-2 btn-yellow">
+                                            Inicia sesión para firmar
+                                        </a>
+                                    @endauth
 
                                     <p class="small text-muted mt-3">
                                         Al firmar, aceptas nuestros términos de servicio y política de privacidad.

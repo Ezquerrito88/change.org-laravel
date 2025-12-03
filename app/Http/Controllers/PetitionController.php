@@ -130,4 +130,24 @@ class PetitionController extends Controller
 
         return view('peticiones.index', compact('petitions'));
     }
+
+    // Función para FIRMAR
+    public function sign($id)
+    {
+        $petition = Petition::findOrFail($id);
+        $user = Auth::user();
+
+        // Comprobamos si el usuario YA está en la lista de firmas
+        // Usamos 'signatures()' que es el nombre nuevo que acabamos de poner en el Modelo
+        if (!$petition->signatures()->where('user_id', $user->id)->exists()) {
+
+            // 1. Guardar la firma en la tabla intermedia
+            $petition->signatures()->attach($user->id);
+
+            // 2. Sumar 1 al contador visual
+            $petition->increment('signers');
+        }
+
+        return back(); // Recargar la página
+    }
 }

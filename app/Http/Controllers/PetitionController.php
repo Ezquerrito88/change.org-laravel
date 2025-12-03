@@ -74,31 +74,35 @@ class PetitionController extends Controller
 
     // Función auxiliar para subir archivos
     // Función auxiliar para subir archivos (CON AUTO-CREACIÓN DE CARPETA)
-    public function fileUpload(Request $req, $petition_id = null)
+    public function fileUpload(Request $req, $petition_id)
     {
-        $file = $req->file('file');
-        $fileModel = new File;
-        $fileModel->petition_id = $petition_id;
-        if ($req->file('file')) {
-            //return $req->file('file');
+        if ($req->hasFile('file')) {
+            $file = $req->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = public_path('petitions'); // Asegúrate que coincide con tu carpeta real
 
-            $filename = $fileName = time() . '_' . $file->getClientOriginalName();
-            //      Storage::put($filename, file_get_contents($req->file('file')->getRealPath()));
-            $file->move('petitions', $filename);
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
 
-            //  Storage::put($filename, file_get_contents($request->file('file')->getRealPath()));
-            //   $file->move('storage/', $name);
+            $file->move($path, $filename);
 
-
-            //$filePath = $req->file('file')->storeAs('/peticiones', $fileName, 'local');
-            //    $filePath = $req->file('file')->storeAs('/peticiones', $fileName, 'local');
-            // return $filePath;
+            // 1. Guardar en tabla FILES (Lo que ya hacías)
+            $fileModel = new File;
+            $fileModel->petition_id = $petition_id;
             $fileModel->name = $filename;
             $fileModel->file_path = $filename;
-            $res = $fileModel->save();
-            return $fileModel;
+            $fileModel->save();
+
+            // 2. ¡LO QUE FALTABA! Guardar en tabla PETITIONS
+            // Sin esto, la vista siempre pensará que no hay foto
+            $petition = Petition::find($petition_id);
+            $petition->image = $filename;
+            $petition->save();
+
+            return true;
         }
-        return 1;
+        return false;
     }
 
     // Mis Peticiones

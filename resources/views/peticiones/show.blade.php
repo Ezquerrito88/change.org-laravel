@@ -12,7 +12,7 @@
                     <div class="col-12 col-lg-7">
 
                         @if($petition->image)
-                            <img src="{{ asset('images/' . $petition->image) }}"
+                            <img src="{{ asset('petitions/' . $petition->image) }}"
                                  class="img-fluid rounded-3 mb-4 col-12"
                                  alt="{{ $petition->title }}"
                                  style="max-height: 450px; width: 100%; object-fit: cover;">

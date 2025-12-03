@@ -40,10 +40,21 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
 
                 @forelse ($petitions as $petition)
-                    <?php var_dump($petition->files); ?>
                     <div class="col">
                         <div class="card h-100 shadow-sm">
+
                             <div style="height: 200px; overflow: hidden;">
+                                @if($petition->image)
+                                    <img src="{{ asset('petitions/' . $petition->image) }}"
+                                         class="card-img-top h-100 w-100"
+                                         style="object-fit: cover;"
+                                         alt="{{ $petition->title }}">
+                                @else
+                                    <img src="https://via.placeholder.com/400x200?text=Sin+Imagen"
+                                         class="card-img-top h-100 w-100"
+                                         style="object-fit: cover;"
+                                         alt="Sin imagen">
+                                @endif
                             </div>
 
                             <div class="card-body d-flex flex-column">
@@ -64,7 +75,7 @@
                 @empty
                     <div class="col-12">
                         <div class="alert alert-info text-center p-5">
-                            <h4>No tienes ninguna petición creada todavía.</h4>
+                            <h4>No hay peticiones para mostrar.</h4>
                             <p>¡Sé el primero en iniciar el cambio!</p>
                             <a href="{{ route('petitions.create') }}" class="btn btn-warning fw-bold mt-2">Inicia una petición</a>
                         </div>

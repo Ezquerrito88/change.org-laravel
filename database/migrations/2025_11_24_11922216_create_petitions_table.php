@@ -15,6 +15,7 @@ return new class extends Migration
             $table->text('recipient');
             $table->integer('signers')->default(0);
             $table->enum('status', ['accepted', 'pending'])->default('pending');
+            $table->string('image')->nullable();
 
             // Foreign Keys
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');

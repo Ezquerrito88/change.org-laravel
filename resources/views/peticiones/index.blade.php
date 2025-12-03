@@ -35,18 +35,50 @@
         </div>
 
         <section class="container my-5">
-            <h2 class="fw-bold mb-4">Peticiones destacadas</h2>
+            <h2 class="fw-bold mb-4">Listado de Peticiones</h2>
+
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <img src="https://assets.change.org/photos/6/uf/zt/sGuFZtLrKpRsFcx-800x450-noPad.jpg?1762004291" class="card-img-top" alt="Imagen Petición">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title fw-bold">Por una justicia más rápida</h5>
-                            <a href="{{ route('petitions.show', ['id' => 1]) }}" class="btn btn-outline-dark mt-auto">Ver petición</a>
+
+                @forelse ($petitions as $petition)
+                    <?php var_dump($petition->files); ?>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div style="height: 200px; overflow: hidden;">
+                            </div>
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title fw-bold text-truncate" title="{{ $petition->title }}">
+                                    {{ $petition->title }}
+                                </h5>
+
+                                <p class="small text-muted mb-2">
+                                    <i class="bi bi-pen-fill text-danger"></i> {{ $petition->signers }} firmas
+                                </p>
+
+                                <a href="{{ route('petitions.show', $petition->id) }}" class="btn btn-outline-danger mt-auto fw-bold">
+                                    Ver petición
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @empty
+                    <div class="col-12">
+                        <div class="alert alert-info text-center p-5">
+                            <h4>No tienes ninguna petición creada todavía.</h4>
+                            <p>¡Sé el primero en iniciar el cambio!</p>
+                            <a href="{{ route('petitions.create') }}" class="btn btn-warning fw-bold mt-2">Inicia una petición</a>
+                        </div>
+                    </div>
+                @endforelse
+
             </div>
+
+            <div class="d-flex justify-content-center mt-5">
+                @if($petitions instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                    {{ $petitions->links() }}
+                @endif
+            </div>
+
         </section>
     </section>
 @endsection

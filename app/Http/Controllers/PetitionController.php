@@ -5,115 +5,125 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Petition;
 use App\Models\Category;
+use App\Models\File; // <--- 1. FALTABA ESTO
 use Illuminate\Support\Facades\Auth;
 
 class PetitionController extends Controller
 {
-    // 1. LISTADO DE PETICIONES
+    // 1. LISTADO
     public function index()
     {
-        $petitions = Petition::all();
+        // Ordenamos por fecha para ver las nuevas primero
+        $petitions = Petition::orderBy('created_at', 'desc')->paginate(10);
         return view('peticiones.index', compact('petitions'));
     }
 
-    // 2. VER UNA SOLA PETICIÓN
+    // 2. DETALLE
     public function show($id)
     {
         $petition = Petition::findOrFail($id);
         return view('peticiones.show', compact('petition'));
     }
 
-    // Función auxiliar para subir archivos
-    private function fileUpload(Request $request, $petition_id)
-    {
-        try {
-            if ($request->hasFile('file')) {
-                $file = $request->file('file');
-                $filename = time() . '.' . $file->getClientOriginalExtension();
-                $path = public_path('images');
-                $file->move($path, $filename);
-
-                // Actualizamos la petición con el nombre de la imagen
-                $petition = Petition::findOrFail($petition_id);
-                $petition->image = $filename;
-                $petition->save();
-
-                return true;
-            }
-            return true; // Si no hay foto, también devolvemos true porque no es error
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    // 3. MOSTRAR FORMULARIO DE CREAR
+    // 3. FORMULARIO
     public function create()
     {
         $categorias = Category::all();
         return view('peticiones.create', compact('categorias'));
     }
 
-    // 4. GUARDAR PETICIÓN
-    // Guarda la petición en la base de datos (Estilo Profesora)
+    // 4. GUARDAR (STORE)
     public function store(Request $request)
     {
-        // CORRECCIÓN: Usamos $request->validate en vez de $this->validate
+        // Validación corregida
         $request->validate([
             'title'       => 'required|max:255',
             'description' => 'required',
             'recipient'   => 'required',
-            'category_id' => 'required',
-            'file'        => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'category_id' => 'required', // <--- 2. CORREGIDO (antes ponía 'category')
+            'file'        => 'required|image|max:2048',
         ]);
 
-        $input = $request->all();
-
         try {
+            $input = $request->all();
+
+            // Buscar categoría y usuario
             $category = Category::findOrFail($input['category_id']);
             $user = Auth::user();
 
+            // Crear objeto Petición
             $petition = new Petition($input);
             $petition->category()->associate($category);
             $petition->user()->associate($user);
 
-            $petition->signers = 0;
+            // Valores por defecto
+            $petition->signers = 0; // <--- 3. CORREGIDO (antes 'signeds')
             $petition->status = 'pending';
 
-            $res = $petition->save();
+            $petition->save();
 
-            if ($res) {
-                $res_file = $this->fileUpload($request, $petition->id);
+            // Subir imagen
+            $this->fileUpload($request, $petition->id);
 
-                if ($res_file) {
-                    // CORRECCIÓN: Nombres de ruta en inglés para coincidir con web.php
-                    return redirect()->route('petitions.mine');
-                }
+            return redirect()->route('petitions.mine'); // Redirige a "Mis peticiones"
 
-                return back()->withError('Error subiendo la imagen')->withInput();
-            }
-
-        } catch (\Exception $exception) {
-            return back()->withError($exception->getMessage())->withInput();
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage())->withInput();
         }
     }
 
-    // Función para "Mis Peticiones"
-        public function listMine(Request $request)
-        {
-            try {
-                // 1. Obtenemos el ID del usuario conectado
-                $user = Auth::user();
+    // Función auxiliar para subir archivos
+    // Función auxiliar para subir archivos (CON AUTO-CREACIÓN DE CARPETA)
+    public function fileUpload(Request $req, $petition_id = null)
+    {
+        $file = $req->file('file');
+        $fileModel = new File;
+        $fileModel->petition_id = $petition_id;
+        if ($req->file('file')) {
+            //return $req->file('file');
 
-                // 2. Buscamos en la BD solo las peticiones de este usuario
-                // Usamos 'paginate(5)' para que salgan de 5 en 5, como en tu foto
-                $petitions = Petition::where('user_id', $user->id)->paginate(5);
+            $filename = $fileName = time() . '_' . $file->getClientOriginalName();
+            //      Storage::put($filename, file_get_contents($req->file('file')->getRealPath()));
+            $file->move('petitions', $filename);
 
-            } catch (\Exception $exception) {
-                // Si falla, volvemos atrás con el error
-                return back()->withError($exception->getMessage())->withInput();
-            }
+            //  Storage::put($filename, file_get_contents($request->file('file')->getRealPath()));
+            //   $file->move('storage/', $name);
 
-            // 3. Reutilizamos la vista 'index' pero solo con sus peticiones
-            return view('peticiones.index', compact('petitions'));
+
+            //$filePath = $req->file('file')->storeAs('/peticiones', $fileName, 'local');
+            //    $filePath = $req->file('file')->storeAs('/peticiones', $fileName, 'local');
+            // return $filePath;
+            $fileModel->name = $filename;
+            $fileModel->file_path = $filename;
+            $res = $fileModel->save();
+            return $fileModel;
         }
+        return 1;
+    }
+
+    // Mis Peticiones
+    public function listMine(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $petitions = Petition::where('user_id', $user->id)->paginate(5);
+        } catch (\Exception $exception) {
+            return back()->withError($exception->getMessage());
+        }
+
+        return view('peticiones.index', compact('petitions'));
+    }
+
+    // Mis Firmas
+    public function listSigned(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $petitions = $user->signatures()->paginate(5);
+        } catch (\Exception $exception) {
+            return back()->withError($exception->getMessage());
+        }
+
+        return view('peticiones.index', compact('petitions'));
+    }
 }

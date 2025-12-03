@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 class Petition extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'recipient', 'signers', 'status', 'user_id', 'category_id', 'image'];
+    protected $fillable = ['title', 'description', 'recipient', 'signers', 'status'];
 
     public function category() { return $this->belongsTo(Category::class); }
     public function user() { return $this->belongsTo(User::class); }
     public function signers() { return $this->belongsToMany(User::class, 'petition_user'); }
-    public function files() { return $this->hasMany(File::class); }
+    public function files() { return $this->hasOne(File::class); }
 }
